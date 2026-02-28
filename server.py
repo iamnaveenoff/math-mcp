@@ -1,9 +1,15 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from mcp.server.fastapi import FastAPIMCP
 
 app = FastAPI()
-mcp = FastAPIMCP(app, name="math-python-mcp")
 
+# IMPORTANT: create MCP instance globally
+mcp = FastAPIMCP(
+    app,
+    name="math-mcp-python",
+)
+
+# ---- Tools ----
 @mcp.tool()
 def add(a: int, b: int) -> int:
     return a + b
@@ -19,3 +25,9 @@ def multiply(a: int, b: int) -> int:
 @mcp.tool()
 def divide(a: int, b: int) -> float:
     return a / b
+
+
+# HEALTH CHECK (very important for Render)
+@app.get("/")
+def root():
+    return {"status": "MCP server running"}
